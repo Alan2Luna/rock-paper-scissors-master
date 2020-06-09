@@ -24,7 +24,6 @@ const RulesStyled = styled.div`
             color: #3B4262;
             text-transform: uppercase;
             font-weight: 700;
-            font-family: Arial;
             letter-spacing: -2px;
             margin-bottom: 1em;
         }
@@ -47,7 +46,9 @@ function Rules() {
                     </div>
                 )
             }
-            <Button onClick={handleToggleClick} />
+            <Button onClick={handleToggleClick}>
+                Rules
+            </Button>
         </RulesStyled>
     )
 }
