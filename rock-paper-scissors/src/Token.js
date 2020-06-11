@@ -13,6 +13,8 @@ const TokenStyled = styled.div`
     box-shadow: 0 5px 0 ${({color}) => color.border};
     position: relative;
     z-index: 2;
+    ${({ isShadowAnimated }) => isShadowAnimated && ' box-shadow: 0 0 0 40px rgba(255, 255, 255, .04), 0 0 0 80px rgba(255, 255, 255, .03), 0 0 0 120px rgba(255, 255, 255, .02);'}
+
     &:active {
         transform: scale(.9);
     }
@@ -47,13 +49,15 @@ const colors = {
     }
 }
 
-function Token({ name = 'default', onClick }) {
+function Token({ name = 'default', onClick, isShadowAnimated = false }) {
     function handleClick() {
-        onClick(name);
+        if(onClick) {
+            onClick(name);
+        }
     }
     const color = colors[name];
     return (
-        <TokenStyled color={color} onClick={handleClick} name={name}>
+        <TokenStyled color={color} onClick={handleClick} name={name} isShadowAnimated={isShadowAnimated}>
             <div className="box">
                 <img src={`./images/icon-${name}.svg`} alt=""/>
             </div>

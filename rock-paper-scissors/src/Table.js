@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Token from './Token';
 import { WhiteButton } from './Button';
+import { ScoreContext } from './App';
 
 const TableStyled = styled.div`
     display: grid;
@@ -23,6 +24,9 @@ const TableStyled = styled.div`
     }
     .results {
         text-align: center;
+        h2 {
+            text-transform: uppercase;
+        }
     }
     .line {
         display: ${({ playing }) => !playing ? 'block' : 'none'} ;
@@ -63,18 +67,38 @@ const elements = [
 ]
 
 function Table() {
+    const { iWon, setIWon } = useState(false);
+    const { score, setScore } = useContext(ScoreContext);
+    const [results, setResults] = useState('');
+    const [housePick, setHousePick] = useState('default');
     const [playing, setPlaying] = useState(false);
     const [pick, setPick] = useState('');
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
-    function onClick(name) {
+    function launchHousePick() {
+        return new Promise((resolve, reject) => {
+            let pick;
+            const interval = setInterval(() => {
+                pick = elements[getRandomInt(0,3)];
+                setHousePick(pick);
+            }, 75)
+            setTimeout(() => {
+                clearInterval(interval)
+                resolve(pick)
+            }, 2000)
+        })
+    }
+    async function onClick(name) {
         setPlaying(true);
         setPick(name);
-        const housePick = elements[getRandomInt(0,3)]
-        console.log('la casa elegió ', housePick);
-        const results = playWithIA(name, housePick);
-        console.log(results);
+        const house = await launchHousePick();
+        const results =  playWithIA(name, house);
+        setResults(results);
+        if (results === 'win') {
+            setScore(score + 1);
+            setIWon(true);
+        }
     }
     function playWithIA(pick, housePick) {
         if(housePick === pick) {
@@ -121,15 +145,15 @@ function Table() {
                 ) : (
                     <>
                         <div className="in-game">
-                            <Token name={pick}/>
+                            <Token name={pick} isShadowAnimated={(results === 'win')} />
                             <p>You Picked</p>
                         </div>
                         <div className="in-game">
-                        <Token />
+                            <Token name={housePick} isShadowAnimated={(results === 'lose')} />
                             <p>The house Picked</p>
                         </div>
                         <div className="results">
-                            <h2>You ???</h2>
+                            <h2>You { results }</h2>
                             <WhiteButton onClick={handleTryAgainClick}>
                                 Try Again
                             </WhiteButton>
