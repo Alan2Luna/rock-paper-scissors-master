@@ -3,11 +3,23 @@ import styled from 'styled-components';
 import Button from './Button';
 
 const RulesStyled = styled.div`
+    text-align: center;
+    &:before {
+        content: '';
+        display: ${({ visible }) => visible ? 'block' : 'none'};
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background: rgba(0, 0, 0, .6);
+    }
     .close-button {
         margin-top: 2em;
+        cursor: pointer;
     }
-    text-align: center;
-    .rules-overlay {
+    .rules-modal {
         background-color: white;
         padding: 4em 0;
         position: fixed;
@@ -15,7 +27,7 @@ const RulesStyled = styled.div`
         right: 0;
         top: 0;
         bottom: 0;
-        z-index: 2;
+        z-index: 3;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -28,6 +40,33 @@ const RulesStyled = styled.div`
             margin-bottom: 1em;
         }
     }
+    @media screen and (min-width: 768px) {
+        .button {
+            position: fixed;
+            bottom: 2em;
+            right: 2em;
+        }
+        .rules-modal {
+            width: 400px;
+            margin: auto;
+            border-radius: 10px;
+            top: 0;
+            bottom: initial;
+            transform: translateY(50%);
+            box-sizing: border-box;
+            padding: 2em;
+            h2 {
+                align-self: flex-start;
+                font-size: 32px;
+                margin: 0 0 1.2em 0;
+            }
+        }
+        .close-button {
+            position: absolute;
+            right: 2em;
+            top: .8em;
+        }
+    }
 `
 
 function Rules() {
@@ -36,17 +75,17 @@ function Rules() {
         setVisible(!visible)
     }
     return (
-        <RulesStyled>
+        <RulesStyled visible={visible}>
             {
                 (visible) && (
-                    <div className="rules-overlay">
+                    <div className="rules-modal">
                         <h2>Rules</h2>
                         <img src="./images/image-rules.svg" alt="rules"/>
                         <img className="close-button" onClick={handleToggleClick} src="./images/icon-close.svg" alt="close rules"/>
                     </div>
                 )
             }
-            <Button onClick={handleToggleClick}>
+            <Button onClick={handleToggleClick} className="button">
                 Rules
             </Button>
         </RulesStyled>

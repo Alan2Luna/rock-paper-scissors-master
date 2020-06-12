@@ -6,12 +6,13 @@ import Wrapper from './Wrapper';
 import Table from './Table';
 import Rules from './Rules';
 
-export const ScoreContext = createContext(0);
+export const ScoreContext = createContext();
 
 const AppStyled = styled.main`
   font-family: 'Barlow Semi Condensed', sans-serif;
   color: white;
   background-image: radial-gradient(circle at top, hsl(214, 47%, 23%) 20%, hsl(237, 49%, 15%) 50%);
+  
   .app-content {
     min-height: 100vh;
     display: flex;
